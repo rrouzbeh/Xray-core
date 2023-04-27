@@ -2,10 +2,13 @@ package websocket
 
 import (
 	"context"
+	ltls "crypto/tls"
 	_ "embed"
 	"encoding/base64"
+	"encoding/binary"
 	"fmt"
 	"io"
+	"math/rand"
 	gonet "net"
 	"net/http"
 	"os"
@@ -13,6 +16,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/xtls/xray-core/common"
+	"github.com/xtls/xray-core/common/errors"
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/common/session"
 	"github.com/xtls/xray-core/transport/internet"
@@ -25,6 +29,68 @@ var webpage []byte
 
 var conns chan *websocket.Conn
 
+type FragmentedClientHelloConn struct {
+	net.Conn
+	clientHelloCount int
+	maxFragmentSize  int
+}
+
+func (c *FragmentedClientHelloConn) Write(b []byte) (n int, err error) {
+	if len(b) >= 5 && b[0] == 22 && c.clientHelloCount < 2 {
+		n, err = sendFragmentedClientHello(c.Conn, b, c.maxFragmentSize)
+		if err == nil {
+			c.clientHelloCount++
+			return n, err
+		}
+	}
+
+	return c.Conn.Write(b)
+}
+
+func sendFragmentedClientHello(conn net.Conn, clientHello []byte, maxFragmentSize int) (n int, err error) {
+	if len(clientHello) < 5 || clientHello[0] != 22 {
+		return 0, errors.New("not a valid TLS ClientHello message")
+	}
+
+	clientHelloLen := (int(clientHello[3]) << 8) | int(clientHello[4])
+
+	clientHelloData := clientHello[5:]
+	for i := 0; i < clientHelloLen; i += maxFragmentSize {
+		fragmentEnd := i + maxFragmentSize
+		if fragmentEnd > clientHelloLen {
+			fragmentEnd = clientHelloLen
+		}
+
+		fragment := clientHelloData[i:fragmentEnd]
+
+		err = writeFragmentedRecord(conn, 22, fragment)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	return len(clientHello), nil
+}
+
+func writeFragmentedRecord(conn net.Conn, contentType uint8, data []byte) error {
+	header := make([]byte, 5)
+	header[0] = byte(contentType)
+	binary.BigEndian.PutUint16(header[1:], uint16(ltls.VersionTLS12))
+	binary.BigEndian.PutUint16(header[3:], uint16(len(data)))
+
+	_, err := conn.Write(append(header, data...))
+	return err
+}
+
+func wrapWithFragmentation(conn net.Conn, maxFragmentSize int) net.Conn {
+	if maxFragmentSize > 0 {
+		return &FragmentedClientHelloConn{
+			Conn:            conn,
+			maxFragmentSize: int(maxFragmentSize),
+		}
+	}
+	return conn
+}
 func init() {
 	if addr := os.Getenv("XRAY_BROWSER_DIALER"); addr != "" {
 		conns = make(chan *websocket.Conn, 256)
@@ -94,8 +160,14 @@ func dialWebSocket(ctx context.Context, dest net.Destination, streamSettings *in
 					newError("failed to dial to " + addr).Base(err).AtError().WriteToLog()
 					return nil, err
 				}
+
+				// Wrap the connection with fragmentation logic
+				maxFragmentSize := 300 + rand.Intn(300)
+				pconn = wrapWithFragmentation(pconn, maxFragmentSize)
+
 				// TLS and apply the handshake
 				cn := tls.UClient(pconn, tlsConfig, fingerprint).(*tls.UConn)
+
 				if err := cn.WebsocketHandshake(); err != nil {
 					newError("failed to dial to " + addr).Base(err).AtError().WriteToLog()
 					return nil, err
@@ -108,7 +180,20 @@ func dialWebSocket(ctx context.Context, dest net.Destination, streamSettings *in
 				}
 				return cn, nil
 			}
+		} else {
+			originalDialerNetDial := dialer.NetDial
+			dialer.NetDial = func(network, addr string) (net.Conn, error) {
+				conn, err := originalDialerNetDial(network, addr)
+				if err != nil {
+					return nil, err
+				}
+				maxFragmentSize := 300 + rand.Intn(300)
+				conn = wrapWithFragmentation(conn, maxFragmentSize)
+
+				return conn, nil
+			}
 		}
+
 	}
 
 	host := dest.NetAddr()
