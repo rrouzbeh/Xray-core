@@ -6,7 +6,7 @@ on:
     types: [published]
   push:
     branches:
-      - tls-hello-fragmentation
+      - main
     paths:
       - "**/*.go"
       - "go.mod"
