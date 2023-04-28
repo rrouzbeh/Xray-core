@@ -8,12 +8,12 @@ import (
 	_ "unsafe"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/xtls/xray-core/app/router"
-	"github.com/xtls/xray-core/common"
-	"github.com/xtls/xray-core/common/net"
-	"github.com/xtls/xray-core/common/platform"
-	"github.com/xtls/xray-core/common/platform/filesystem"
-	. "github.com/xtls/xray-core/infra/conf"
+	"github.com/rrouzbeh/xray-core/app/router"
+	"github.com/rrouzbeh/xray-core/common"
+	"github.com/rrouzbeh/xray-core/common/net"
+	"github.com/rrouzbeh/xray-core/common/platform"
+	"github.com/rrouzbeh/xray-core/common/platform/filesystem"
+	. "github.com/rrouzbeh/xray-core/infra/conf"
 )
 
 func init() {

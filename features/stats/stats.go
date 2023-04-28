@@ -1,12 +1,12 @@
 package stats
 
-//go:generate go run github.com/xtls/xray-core/common/errors/errorgen
+//go:generate go run github.com/rrouzbeh/xray-core/common/errors/errorgen
 
 import (
 	"context"
 
-	"github.com/xtls/xray-core/common"
-	"github.com/xtls/xray-core/features"
+	"github.com/rrouzbeh/xray-core/common"
+	"github.com/rrouzbeh/xray-core/features"
 )
 
 // Counter is the interface for stats counters.

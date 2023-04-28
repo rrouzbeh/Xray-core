@@ -1,6 +1,6 @@
 package udp
 
-import "github.com/xtls/xray-core/common/errors"
+import "github.com/rrouzbeh/xray-core/common/errors"
 
 type errPathObjHolder struct{}
 

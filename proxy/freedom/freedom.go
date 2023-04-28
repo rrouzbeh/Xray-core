@@ -1,26 +1,26 @@
 package freedom
 
-//go:generate go run github.com/xtls/xray-core/common/errors/errorgen
+//go:generate go run github.com/rrouzbeh/xray-core/common/errors/errorgen
 
 import (
 	"context"
 	"time"
 
-	"github.com/xtls/xray-core/common"
-	"github.com/xtls/xray-core/common/buf"
-	"github.com/xtls/xray-core/common/dice"
-	"github.com/xtls/xray-core/common/net"
-	"github.com/xtls/xray-core/common/retry"
-	"github.com/xtls/xray-core/common/session"
-	"github.com/xtls/xray-core/common/signal"
-	"github.com/xtls/xray-core/common/task"
-	"github.com/xtls/xray-core/core"
-	"github.com/xtls/xray-core/features/dns"
-	"github.com/xtls/xray-core/features/policy"
-	"github.com/xtls/xray-core/features/stats"
-	"github.com/xtls/xray-core/transport"
-	"github.com/xtls/xray-core/transport/internet"
-	"github.com/xtls/xray-core/transport/internet/stat"
+	"github.com/rrouzbeh/xray-core/common"
+	"github.com/rrouzbeh/xray-core/common/buf"
+	"github.com/rrouzbeh/xray-core/common/dice"
+	"github.com/rrouzbeh/xray-core/common/net"
+	"github.com/rrouzbeh/xray-core/common/retry"
+	"github.com/rrouzbeh/xray-core/common/session"
+	"github.com/rrouzbeh/xray-core/common/signal"
+	"github.com/rrouzbeh/xray-core/common/task"
+	"github.com/rrouzbeh/xray-core/core"
+	"github.com/rrouzbeh/xray-core/features/dns"
+	"github.com/rrouzbeh/xray-core/features/policy"
+	"github.com/rrouzbeh/xray-core/features/stats"
+	"github.com/rrouzbeh/xray-core/transport"
+	"github.com/rrouzbeh/xray-core/transport/internet"
+	"github.com/rrouzbeh/xray-core/transport/internet/stat"
 )
 
 func init() {

@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
-	v2net "github.com/xtls/xray-core/common/net"
-	"github.com/xtls/xray-core/common/protocol"
-	"github.com/xtls/xray-core/proxy/freedom"
+	v2net "github.com/rrouzbeh/xray-core/common/net"
+	"github.com/rrouzbeh/xray-core/common/protocol"
+	"github.com/rrouzbeh/xray-core/proxy/freedom"
 )
 
 type FreedomConfig struct {

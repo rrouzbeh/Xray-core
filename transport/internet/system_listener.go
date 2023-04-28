@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/pires/go-proxyproto"
+	"github.com/rrouzbeh/xray-core/common/net"
+	"github.com/rrouzbeh/xray-core/common/session"
 	"github.com/sagernet/sing/common/control"
-	"github.com/xtls/xray-core/common/net"
-	"github.com/xtls/xray-core/common/session"
 )
 
 var effectiveListener = DefaultListener{}

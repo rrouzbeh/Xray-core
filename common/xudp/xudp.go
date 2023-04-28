@@ -9,10 +9,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/xtls/xray-core/common/buf"
-	"github.com/xtls/xray-core/common/net"
-	"github.com/xtls/xray-core/common/protocol"
-	"github.com/xtls/xray-core/common/session"
+	"github.com/rrouzbeh/xray-core/common/buf"
+	"github.com/rrouzbeh/xray-core/common/net"
+	"github.com/rrouzbeh/xray-core/common/protocol"
+	"github.com/rrouzbeh/xray-core/common/session"
 	"lukechampine.com/blake3"
 )
 

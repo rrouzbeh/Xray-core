@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/xtls/xray-core/features"
+	"github.com/rrouzbeh/xray-core/features"
 )
 
 type Observatory interface {

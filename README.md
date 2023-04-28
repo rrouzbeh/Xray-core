@@ -1,12 +1,12 @@
 # Project X
 
-[Project X](https://github.com/XTLS) originates from XTLS protocol, providing a set of network tools such as [Xray-core](https://github.com/XTLS/Xray-core) and [REALITY](https://github.com/XTLS/REALITY).
+[Project X](https://github.com/XTLS) originates from XTLS protocol, providing a set of network tools such as [Xray-core](https://github.com/rrouzbeh/xray-core) and [REALITY](https://github.com/XTLS/REALITY).
 
-[README](https://github.com/XTLS/Xray-core#readme) is open, so feel free to submit your project [here](https://github.com/XTLS/Xray-core/pulls).
+[README](https://github.com/rrouzbeh/xray-core#readme) is open, so feel free to submit your project [here](https://github.com/rrouzbeh/xray-core/pulls).
 
 ## License
 
-[Mozilla Public License Version 2.0](https://github.com/XTLS/Xray-core/blob/main/LICENSE)
+[Mozilla Public License Version 2.0](https://github.com/rrouzbeh/xray-core/blob/main/LICENSE)
 
 ## Documentation
 
@@ -99,7 +99,7 @@
 
 ## Contributing
 
-[Code of Conduct](https://github.com/XTLS/Xray-core/blob/main/CODE_OF_CONDUCT.md)
+[Code of Conduct](https://github.com/rrouzbeh/xray-core/blob/main/CODE_OF_CONDUCT.md)
 
 ## Credits
 
