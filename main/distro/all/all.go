@@ -51,6 +51,7 @@ import (
 	_ "github.com/xtls/xray-core/proxy/wireguard"
 
 	// Transports
+	_ "github.com/rrouzbeh/xray-core/transport/internet/websocket"
 	_ "github.com/xtls/xray-core/transport/internet/domainsocket"
 	_ "github.com/xtls/xray-core/transport/internet/grpc"
 	_ "github.com/xtls/xray-core/transport/internet/http"
@@ -60,7 +61,6 @@ import (
 	_ "github.com/xtls/xray-core/transport/internet/tcp"
 	_ "github.com/xtls/xray-core/transport/internet/tls"
 	_ "github.com/xtls/xray-core/transport/internet/udp"
-	_ "github.com/xtls/xray-core/transport/internet/websocket"
 
 	// Transport headers
 	_ "github.com/xtls/xray-core/transport/internet/headers/http"

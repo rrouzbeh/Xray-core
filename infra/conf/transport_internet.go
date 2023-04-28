@@ -12,6 +12,7 @@ import (
 	"syscall"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/rrouzbeh/xray-core/transport/internet/websocket"
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/common/platform/filesystem"
 	"github.com/xtls/xray-core/common/protocol"
@@ -25,7 +26,6 @@ import (
 	"github.com/xtls/xray-core/transport/internet/reality"
 	"github.com/xtls/xray-core/transport/internet/tcp"
 	"github.com/xtls/xray-core/transport/internet/tls"
-	"github.com/xtls/xray-core/transport/internet/websocket"
 )
 
 var (
