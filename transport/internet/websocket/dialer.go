@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"crypto/rand"
 
 	"github.com/gorilla/websocket"
 	"github.com/rrouzbeh/xray-core/common"
@@ -48,28 +49,37 @@ func (c *FragmentedClientHelloConn) Write(b []byte) (n int, err error) {
 }
 
 func sendFragmentedClientHello(conn net.Conn, clientHello []byte, maxFragmentSize int) (n int, err error) {
-	if len(clientHello) < 5 || clientHello[0] != 22 {
-		return 0, errors.New("not a valid TLS ClientHello message")
-	}
+    if len(clientHello) < 5 || clientHello[0] != 22 {
+        return 0, errors.New("not a valid TLS ClientHello message")
+    }
 
-	clientHelloLen := (int(clientHello[3]) << 8) | int(clientHello[4])
+    clientHelloLen := (int(clientHello[3]) << 8) | int(clientHello[4])
+    clientHelloData := clientHello[5:]
 
-	clientHelloData := clientHello[5:]
-	for i := 0; i < clientHelloLen; i += maxFragmentSize {
-		fragmentEnd := i + maxFragmentSize
-		if fragmentEnd > clientHelloLen {
-			fragmentEnd = clientHelloLen
-		}
+    for i := 0; i < clientHelloLen; {
+        // Generate a random fragment size between 15 and maxFragmentSize
+        fragmentSize, err := rand.Int(rand.Reader, big.NewInt(int64(maxFragmentSize-15)))
+        if err != nil {
+            return 0, err
+        }
+        fragmentSize = fragmentSize.Int64() + 15
 
-		fragment := clientHelloData[i:fragmentEnd]
+        fragmentEnd := i + int(fragmentSize.Int64())
+        if fragmentEnd > clientHelloLen {
+            fragmentEnd = clientHelloLen
+        }
 
-		err = writeFragmentedRecord(conn, 22, fragment)
-		if err != nil {
-			return 0, err
-		}
-	}
+        fragment := clientHelloData[i:fragmentEnd]
 
-	return len(clientHello), nil
+        err = writeFragmentedRecord(conn, 22, fragment)
+        if err != nil {
+            return 0, err
+        }
+
+        i = fragmentEnd
+    }
+
+    return len(clientHello), nil
 }
 
 func writeFragmentedRecord(conn net.Conn, contentType uint8, data []byte) error {
